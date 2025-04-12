@@ -14,6 +14,7 @@ public class Menu : MonoBehaviour
     public void Iniciar() // Carga el menú de niveles
     {
         print("Botón Inicial");
+
         StartCoroutine(CambiarEscenaDespuesDeSonido(PresionarBoton, escenaSelectorNiveles));
     }
 
@@ -25,13 +26,15 @@ public class Menu : MonoBehaviour
 
     private IEnumerator CambiarEscenaDespuesDeSonido(AudioClip clip, string nombreEscena)
     {
+
         if (clip != null)
         {
-            audioSource.PlayOneShot(clip);
+            audioSource.PlayOneShot(clip); // Reproduce el sonido
             Debug.Log("Esperando " + clip.length + " segundos antes de cambiar de escena...");
-            yield return new WaitForSeconds(clip.length);
+            yield return new WaitForSeconds(clip.length); // Generará un delay definido por la duración del sonido
         }
 
+        // Cargará la escena luego de reproducirse el sonido
         SceneManager.LoadScene(nombreEscena);
     }
 

@@ -8,28 +8,29 @@ public class MenuNiveles : MonoBehaviour
     [SerializeField] string escenaMenuPrincipal; // Menú principal
     [SerializeField] string escenaNivel_1; // Escena nivel 1
     [SerializeField] string escenaNivel_2; // Escena nivel 2
-    [SerializeField] AudioClip PresionarBoton; // Menú de créditos
-    [SerializeField] AudioSource audioSource; // Menú de créditos
+    [SerializeField] AudioClip PresionarBoton; // Archivo de audio 
+    [SerializeField] AudioSource audioSource; // Reproductor de sonidos
 
 
-    public void Volver() // Carga el menú de niveles
+    public void Volver() // Carga el menú principal
     {
         print("Botón Volver");
         StartCoroutine(CambiarEscenaDespuesDeSonido(PresionarBoton, escenaMenuPrincipal));
     }
 
-    public void Nivel_1() // Carga el apartado de creditos
+    public void Nivel_1() // Carga el nivel 1
     {
         print("Botón Nivel 1");
         StartCoroutine(CambiarEscenaDespuesDeSonido(PresionarBoton, escenaNivel_1));
     }
 
-    public void Nivel_2() // Carga el apartado de creditos
+    public void Nivel_2() // Carga el nivel 2
     {
         print("Botón Nivel 2");
         StartCoroutine(CambiarEscenaDespuesDeSonido(PresionarBoton, escenaNivel_2));
     }
 
+    // Permite cargar una escena luego de reproducir un sonido
     private IEnumerator CambiarEscenaDespuesDeSonido(AudioClip clip, string nombreEscena)
     {
         if (clip != null)
