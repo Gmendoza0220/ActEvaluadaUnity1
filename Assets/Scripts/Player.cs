@@ -95,15 +95,26 @@ public class Player : MonoBehaviour
         float desplazamiento = direccion * hSpeed * Time.deltaTime;
         float nuevaPosX = transform.position.x + desplazamiento;
 
+
+        // En caso que no tengamos limites en el escenario
+        transform.Translate(desplazamiento, 0, 0); 
+
+        if (enSuelo && !audioSource.isPlaying)
+        {
+            ReproducirSonido(audioRun);
+        }
+
+        /*
         if (EstaDentroDeLimites(nuevaPosX))
         {
-            transform.Translate(desplazamiento, 0, 0);
+            //transform.Translate(desplazamiento, 0, 0);
 
             if (enSuelo && !audioSource.isPlaying)
             {
                 ReproducirSonido(audioRun);
             }
         }
+        */
     }
 
 
