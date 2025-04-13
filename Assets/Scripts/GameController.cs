@@ -33,6 +33,9 @@ public class GameController : MonoBehaviour
     private float limIzq;            // Límite izquierdo del nivel
     private float limDer;            // Límite derecho del nivel
 
+    // Experimento: Obtener LevelTheme
+    private AudioSource levelTheme;
+
     void Awake()
     {
         // Implementación del patrón Singleton
@@ -48,6 +51,9 @@ public class GameController : MonoBehaviour
         // Inicialización de componentes y variables
         audioSource = GetComponent<AudioSource>();
         nVidas = maxVidas;
+
+        // Experimento: obtener musica fondo
+        levelTheme = GameObject.Find("LevelTheme").GetComponent<AudioSource>();
 
         /*
         // Obtener los límites del nivel usando los bordes de los objetos
@@ -121,6 +127,17 @@ public class GameController : MonoBehaviour
         return limDer;
     }
 
+    // Experimento: Detener musica de fondo desde el game controller
+    public void DetenerMusicaFondo()
+    {
+        levelTheme.Stop();
+    }
+
+    public void ReproducirMusicaFondo()
+    {
+        levelTheme.Play();
+    }
+
     // Método para reducir una vida al jugador
     public int RestaVidas()
     {
@@ -181,6 +198,7 @@ public class GameController : MonoBehaviour
     {
         if (clip != null)
         {
+            DetenerMusicaFondo();       // Detiene musica de fondo
             audioSource.PlayOneShot(clip);
             Debug.Log("Esperando " + clip.length + " segundos antes de cambiar de escena...");
             yield return new WaitForSeconds(clip.length);
