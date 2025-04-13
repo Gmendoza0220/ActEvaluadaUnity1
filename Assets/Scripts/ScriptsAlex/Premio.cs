@@ -22,6 +22,12 @@ public class Premio : MonoBehaviour
             // Dejara de estar disponible
             activo = false;
 
+            // Se obtiene una instancia del GameController
+            GameController gc = GameController.GetInstance();
+
+            // Se suma un punto en la partida
+            gc.SumaPuntos(1);
+
             // El sprite desaparecerá
             GetComponent<SpriteRenderer>().enabled = false;
             // Reproducirá el audio que tenga asociado

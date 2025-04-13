@@ -15,16 +15,19 @@ public class GameController : MonoBehaviour
     public static GameController GetInstance() { return instance; }
 
     [SerializeField] private GameObject juegoUI; // Referencia a la interfaz de usuario
-    [SerializeField] private GameObject limiteIzquierdo; // Objeto que define el límite izquierdo
-    [SerializeField] private GameObject limiteDerecho;   // Objeto que define el límite derecho
+    //[SerializeField] private GameObject limiteIzquierdo; // Objeto que define el límite izquierdo
+    //[SerializeField] private GameObject limiteDerecho;   // Objeto que define el límite derecho
     [SerializeField] private GameObject player;          // Referencia al jugador
     [SerializeField] private int maxVidas;               // Número máximo de vidas
     [SerializeField] private AudioClip audioGameOver;    // Sonido al perder todas las vidas
+    [SerializeField] private AudioClip audioVictoria;    // Sonido al ganar el nivel
 
+    private string MenuNiveles = "MenuNiveles";
     private AudioSource audioSource; // Componente de audio del GameController
     private Text vidas;              // Texto de la UI que muestra las vidas
     private Text puntos;             // Texto de la UI que muestra los puntos
     private GameObject gameOver;     // UI de Game Over
+    private GameObject victory;      // UI de Victory
     private int nVidas = 0;          // Número actual de vidas
     private int nPuntos = 0;         // Puntos actuales
     private float limIzq;            // Límite izquierdo del nivel
@@ -46,23 +49,35 @@ public class GameController : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         nVidas = maxVidas;
 
+        /*
         // Obtener los límites del nivel usando los bordes de los objetos
         limIzq = limiteIzquierdo.GetComponent<SpriteRenderer>().bounds.min.x;
         limDer = limiteDerecho.GetComponent<SpriteRenderer>().bounds.max.x;
+        */
 
         // Obtener referencias a elementos de la UI
         vidas = juegoUI.transform.Find("Vidas").gameObject.GetComponent<Text>();
         puntos = juegoUI.transform.Find("Puntos").gameObject.GetComponent<Text>();
         gameOver = juegoUI.transform.Find("ImgGameOver").gameObject;
+        victory = juegoUI.transform.Find("ImgVictory").gameObject;
 
-        
+
         // Inicializar la UI con los valores actuales
         // Verificar si se extrayeron correctamente los elementos de la UI
 
+
+        if(victory == null)
+        {
+            Debug.Log("No se encontró el elemento Victory");
+        } else
+        {
+            victory.SetActive(false);
+        }
         if (gameOver == null)
         {
             Debug.Log("No se encontró el elemento GameOver");
-        } else
+        }
+        else
         {
             gameOver.SetActive(false); // Ocultar la pantalla de Game Over
         }
@@ -118,8 +133,9 @@ public class GameController : MonoBehaviour
                 // Si las vidas llegan a 0, reproducir sonido de Game Over
                 if (nVidas == 0)
                 {
-                    audioSource.PlayOneShot(audioGameOver);
-                    gameOver.SetActive(false); // Mostramos el mensaje de game over
+                    //audioSource.PlayOneShot(audioGameOver);
+                    StartCoroutine(CambiarEscenaDespuesDeSonido(audioGameOver, MenuNiveles));
+                    gameOver.SetActive(true); // Mostramos el mensaje de game over
                 }
 
                 // Actualizar el texto de la UI
@@ -142,10 +158,34 @@ public class GameController : MonoBehaviour
             nPuntos += n; // Sumar los puntos
             Debug.Log("Puntos:" + nPuntos);
             puntos.text = nPuntos.ToString(); // Actualizar el texto en la UI
+
+            if(nPuntos >= 30)
+            {
+                victory.SetActive(true);
+                FinalizarNivel();
+            }
         }
         catch (Exception e)
         {
             Debug.LogError(e); // Imprimir error en consola en caso de fallo
         }
+    }
+
+    public void FinalizarNivel()
+    {
+        StartCoroutine(CambiarEscenaDespuesDeSonido(audioVictoria, MenuNiveles));
+    }
+
+    // Permite cargar una escena luego de reproducir un sonido
+    private IEnumerator CambiarEscenaDespuesDeSonido(AudioClip clip, string nombreEscena)
+    {
+        if (clip != null)
+        {
+            audioSource.PlayOneShot(clip);
+            Debug.Log("Esperando " + clip.length + " segundos antes de cambiar de escena...");
+            yield return new WaitForSeconds(clip.length);
+        }
+
+        SceneManager.LoadScene(nombreEscena);
     }
 }
