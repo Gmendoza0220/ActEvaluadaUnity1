@@ -32,6 +32,23 @@ public class PlataformaMovible : MonoBehaviour
         }
     }
 
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            collision.transform.SetParent(transform); // hace al jugador hijo de la plataforma
+        }
+    }
+
+    void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            collision.transform.SetParent(null); // suelta al jugador
+        }
+    }
+
+    /* OLD
     // Este método hace que el jugador "se pegue" a la plataforma al pararse sobre ella,
     // de modo que se mueva con la plataforma sin problemas.
     void OnCollisionEnter(Collision collision)
@@ -54,5 +71,5 @@ public class PlataformaMovible : MonoBehaviour
             collision.transform.parent = null;
         }
     }
-
+    */
 }
